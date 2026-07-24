@@ -1,0 +1,15 @@
+node_modules/
+.next/
+out/
+coverage/
+playwright-report/
+test-results/
+.env
+.env*.local
+public/sw.js
+public/sw.js.map
+.DS_Store
+*.tsbuildinfo
+.Codex/hooks.json
+.Codex/hooks/
+.Codex/context/tasks/claims/

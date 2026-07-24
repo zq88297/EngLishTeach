@@ -1,0 +1,51 @@
+{
+  "name": "englishtech",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:e2e": "playwright test",
+    "validate:content": "vitest run src/content/content.test.ts"
+  },
+  "dependencies": {
+    "@radix-ui/react-slot": "latest",
+    "@serwist/next": "latest",
+    "@supabase/ssr": "latest",
+    "@supabase/supabase-js": "latest",
+    "class-variance-authority": "latest",
+    "clsx": "latest",
+    "dexie": "latest",
+    "lucide-react": "latest",
+    "next": "latest",
+    "phaser": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "serwist": "latest",
+    "tailwind-merge": "latest",
+    "ts-fsrs": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "latest",
+    "@playwright/test": "latest",
+    "@tailwindcss/postcss": "latest",
+    "@testing-library/jest-dom": "latest",
+    "@testing-library/react": "latest",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@vitejs/plugin-react": "latest",
+    "eslint": "latest",
+    "eslint-config-next": "latest",
+    "jsdom": "latest",
+    "tailwindcss": "latest",
+    "typescript": "latest",
+    "vitest": "latest"
+  }
+}
