@@ -1,4 +1,7 @@
-import { WordDefinitionSchema, type WordDefinition } from "./schemas";
+import {
+  WordDefinitionSchema,
+  type WordDefinitionInput,
+} from "./schemas";
 
 const words = [
   {
@@ -8,8 +11,8 @@ const words = [
     meaningZh: "证据；证明",
     exampleEn: "The detective found evidence beside the locked cabinet.",
     exampleZh: "侦探在上锁的柜子旁发现了证据。",
-    acceptedSpellings: ["evidence"],
-    confusionSet: ["evident", "testimony"],
+    acceptedForms: ["evidence"],
+    confusableIds: ["evident", "testimony"],
   },
   {
     id: "suspect",
@@ -18,8 +21,8 @@ const words = [
     meaningZh: "嫌疑人",
     exampleEn: "Every suspect had access to the archive.",
     exampleZh: "每名嫌疑人都有进入档案室的权限。",
-    acceptedSpellings: ["suspect"],
-    confusionSet: ["witness", "motive"],
+    acceptedForms: ["suspect"],
+    confusableIds: ["witness", "motive"],
   },
   {
     id: "witness",
@@ -28,8 +31,8 @@ const words = [
     meaningZh: "目击者；证人",
     exampleEn: "The witness remembered a silver umbrella.",
     exampleZh: "目击者记得一把银色雨伞。",
-    acceptedSpellings: ["witness"],
-    confusionSet: ["suspect", "testimony"],
+    acceptedForms: ["witness"],
+    confusableIds: ["suspect", "testimony"],
   },
   {
     id: "conceal",
@@ -38,8 +41,8 @@ const words = [
     meaningZh: "隐藏；隐瞒",
     exampleEn: "Heavy curtains concealed the narrow passage.",
     exampleZh: "厚重的窗帘遮住了狭窄的通道。",
-    acceptedSpellings: ["conceal"],
-    confusionSet: ["reveal", "deceive"],
+    acceptedForms: ["conceal"],
+    confusableIds: ["reveal", "deceive"],
   },
   {
     id: "reveal",
@@ -48,8 +51,8 @@ const words = [
     meaningZh: "揭示；透露",
     exampleEn: "The final page may reveal who changed the record.",
     exampleZh: "最后一页可能会揭示是谁篡改了记录。",
-    acceptedSpellings: ["reveal"],
-    confusionSet: ["conceal", "verify"],
+    acceptedForms: ["reveal"],
+    confusableIds: ["conceal", "verify"],
   },
   {
     id: "verify",
@@ -58,8 +61,8 @@ const words = [
     meaningZh: "核实；验证",
     exampleEn: "We must verify the guard's account before midnight.",
     exampleZh: "我们必须在午夜前核实守卫的说法。",
-    acceptedSpellings: ["verify"],
-    confusionSet: ["reveal", "interpret"],
+    acceptedForms: ["verify"],
+    confusableIds: ["reveal", "interpret"],
   },
   {
     id: "contradict",
@@ -68,8 +71,8 @@ const words = [
     meaningZh: "反驳；与……矛盾",
     exampleEn: "The footprints contradict his version of events.",
     exampleZh: "脚印与他对事件的说法相矛盾。",
-    acceptedSpellings: ["contradict"],
-    confusionSet: ["correspond", "testimony"],
+    acceptedForms: ["contradict"],
+    confusableIds: ["correspond", "testimony"],
   },
   {
     id: "testimony",
@@ -78,8 +81,8 @@ const words = [
     meaningZh: "证词；证言",
     exampleEn: "Her testimony placed the courier near the gate.",
     exampleZh: "她的证词表明信使当时在城门附近。",
-    acceptedSpellings: ["testimony"],
-    confusionSet: ["evidence", "witness"],
+    acceptedForms: ["testimony"],
+    confusableIds: ["evidence", "witness"],
   },
   {
     id: "credible",
@@ -88,8 +91,8 @@ const words = [
     meaningZh: "可信的；可靠的",
     exampleEn: "Only one explanation sounded credible.",
     exampleZh: "只有一种解释听起来可信。",
-    acceptedSpellings: ["credible"],
-    confusionSet: ["decisive", "evident"],
+    acceptedForms: ["credible"],
+    confusableIds: ["decisive", "evident"],
   },
   {
     id: "motive",
@@ -98,8 +101,8 @@ const words = [
     meaningZh: "动机；目的",
     exampleEn: "The missing payment gave the clerk a motive.",
     exampleZh: "失踪的款项给了那名职员作案动机。",
-    acceptedSpellings: ["motive"],
-    confusionSet: ["suspect", "alibi"],
+    acceptedForms: ["motive"],
+    confusableIds: ["suspect", "alibi"],
   },
   {
     id: "alibi",
@@ -108,8 +111,8 @@ const words = [
     meaningZh: "不在场证明",
     exampleEn: "A dated receipt supported her alibi.",
     exampleZh: "一张标有日期的收据支持了她的不在场证明。",
-    acceptedSpellings: ["alibi"],
-    confusionSet: ["motive", "testimony"],
+    acceptedForms: ["alibi"],
+    confusableIds: ["motive", "testimony"],
   },
   {
     id: "infer",
@@ -118,8 +121,8 @@ const words = [
     meaningZh: "推断；推论",
     exampleEn: "We can infer the route from the mud on his shoes.",
     exampleZh: "我们可以从他鞋上的泥推断出路线。",
-    acceptedSpellings: ["infer"],
-    confusionSet: ["interpret", "imply"],
+    acceptedForms: ["infer"],
+    confusableIds: ["interpret", "imply"],
   },
   {
     id: "acquire",
@@ -128,8 +131,8 @@ const words = [
     meaningZh: "获得；取得",
     exampleEn: "The collector tried to acquire the rare formula.",
     exampleZh: "收藏家试图获得那份稀有配方。",
-    acceptedSpellings: ["acquire"],
-    confusionSet: ["accuse", "require"],
+    acceptedForms: ["acquire"],
+    confusableIds: ["accuse", "require"],
   },
   {
     id: "prescription",
@@ -138,8 +141,8 @@ const words = [
     meaningZh: "处方；药方",
     exampleEn: "The prescription was written in unfamiliar ink.",
     exampleZh: "这张处方是用陌生的墨水写成的。",
-    acceptedSpellings: ["prescription"],
-    confusionSet: ["remedy", "diagnose"],
+    acceptedForms: ["prescription"],
+    confusableIds: ["remedy", "diagnose"],
   },
   {
     id: "toxic",
@@ -148,8 +151,8 @@ const words = [
     meaningZh: "有毒的；有害的",
     exampleEn: "The laboratory report described the powder as toxic.",
     exampleZh: "实验室报告称这种粉末有毒。",
-    acceptedSpellings: ["toxic"],
-    confusionSet: ["symptom", "remedy"],
+    acceptedForms: ["toxic"],
+    confusableIds: ["symptom", "remedy"],
   },
   {
     id: "remedy",
@@ -158,8 +161,8 @@ const words = [
     meaningZh: "治疗方法；补救措施",
     exampleEn: "The old remedy contained three common herbs.",
     exampleZh: "这种古老药方含有三种常见草药。",
-    acceptedSpellings: ["remedy"],
-    confusionSet: ["prescription", "symptom"],
+    acceptedForms: ["remedy"],
+    confusableIds: ["prescription", "symptom"],
   },
   {
     id: "diagnose",
@@ -168,8 +171,8 @@ const words = [
     meaningZh: "诊断；判断问题",
     exampleEn: "The physician refused to diagnose the patient without evidence.",
     exampleZh: "医师拒绝在没有证据的情况下诊断病人。",
-    acceptedSpellings: ["diagnose"],
-    confusionSet: ["diagnosis", "prescription"],
+    acceptedForms: ["diagnose"],
+    confusableIds: ["diagnosis", "prescription"],
   },
   {
     id: "symptom",
@@ -178,8 +181,8 @@ const words = [
     meaningZh: "症状；征兆",
     exampleEn: "Dizziness was the first symptom mentioned in the diary.",
     exampleZh: "眩晕是日记中提到的第一个症状。",
-    acceptedSpellings: ["symptom"],
-    confusionSet: ["symbol", "remedy"],
+    acceptedForms: ["symptom"],
+    confusableIds: ["symbol", "remedy"],
   },
   {
     id: "cipher",
@@ -188,8 +191,8 @@ const words = [
     meaningZh: "密码；暗号",
     exampleEn: "A simple cipher protected the message.",
     exampleZh: "一种简单的密码保护着这条消息。",
-    acceptedSpellings: ["cipher", "cypher"],
-    confusionSet: ["code", "interpret"],
+    acceptedForms: ["cipher", "cypher"],
+    confusableIds: ["code", "interpret"],
   },
   {
     id: "anonymous",
@@ -198,8 +201,8 @@ const words = [
     meaningZh: "匿名的；身份不明的",
     exampleEn: "An anonymous caller warned us about the tunnel.",
     exampleZh: "一名匿名来电者警告我们注意隧道。",
-    acceptedSpellings: ["anonymous"],
-    confusionSet: ["unknown", "conceal"],
+    acceptedForms: ["anonymous"],
+    confusableIds: ["unknown", "conceal"],
   },
   {
     id: "correspond",
@@ -208,8 +211,8 @@ const words = [
     meaningZh: "相符合；通信",
     exampleEn: "The marks correspond to stations on the old map.",
     exampleZh: "这些标记与旧地图上的车站相对应。",
-    acceptedSpellings: ["correspond"],
-    confusionSet: ["contradict", "transmit"],
+    acceptedForms: ["correspond"],
+    confusableIds: ["contradict", "transmit"],
   },
   {
     id: "interpret",
@@ -218,8 +221,8 @@ const words = [
     meaningZh: "解释；理解",
     exampleEn: "She interpreted the pause as a warning.",
     exampleZh: "她把那次停顿理解为警告。",
-    acceptedSpellings: ["interpret"],
-    confusionSet: ["infer", "translate"],
+    acceptedForms: ["interpret"],
+    confusableIds: ["infer", "translate"],
   },
   {
     id: "transmit",
@@ -228,8 +231,8 @@ const words = [
     meaningZh: "传送；播送",
     exampleEn: "The device can transmit a signal through concrete walls.",
     exampleZh: "该设备可以穿过混凝土墙传送信号。",
-    acceptedSpellings: ["transmit"],
-    confusionSet: ["intercept", "correspond"],
+    acceptedForms: ["transmit"],
+    confusableIds: ["intercept", "correspond"],
   },
   {
     id: "intercept",
@@ -238,8 +241,8 @@ const words = [
     meaningZh: "截获；拦截",
     exampleEn: "The operator managed to intercept the hidden broadcast.",
     exampleZh: "操作员设法截获了隐藏广播。",
-    acceptedSpellings: ["intercept"],
-    confusionSet: ["transmit", "interrupt"],
+    acceptedForms: ["intercept"],
+    confusableIds: ["transmit", "interrupt"],
   },
   {
     id: "banquet",
@@ -248,8 +251,8 @@ const words = [
     meaningZh: "宴会；盛宴",
     exampleEn: "The minister left the banquet before the final course.",
     exampleZh: "大臣在最后一道菜上桌前离开了宴会。",
-    acceptedSpellings: ["banquet"],
-    confusionSet: ["etiquette", "witness"],
+    acceptedForms: ["banquet"],
+    confusableIds: ["etiquette", "witness"],
   },
   {
     id: "etiquette",
@@ -258,8 +261,8 @@ const words = [
     meaningZh: "礼仪；礼节",
     exampleEn: "Court etiquette required every guest to bow twice.",
     exampleZh: "宫廷礼仪要求每位宾客行礼两次。",
-    acceptedSpellings: ["etiquette"],
-    confusionSet: ["banquet", "discreet"],
+    acceptedForms: ["etiquette"],
+    confusableIds: ["banquet", "discreet"],
   },
   {
     id: "discreet",
@@ -268,8 +271,8 @@ const words = [
     meaningZh: "谨慎的；不引人注意的",
     exampleEn: "A discreet inquiry would avoid alarming the suspect.",
     exampleZh: "谨慎调查可以避免惊动嫌疑人。",
-    acceptedSpellings: ["discreet"],
-    confusionSet: ["discrete", "conceal"],
+    acceptedForms: ["discreet"],
+    confusableIds: ["discrete", "conceal"],
   },
   {
     id: "persuade",
@@ -278,8 +281,8 @@ const words = [
     meaningZh: "说服；劝服",
     exampleEn: "We need to persuade the servant to open the side gate.",
     exampleZh: "我们需要说服仆人打开侧门。",
-    acceptedSpellings: ["persuade"],
-    confusionSet: ["coerce", "accuse"],
+    acceptedForms: ["persuade"],
+    confusableIds: ["coerce", "accuse"],
   },
   {
     id: "postpone",
@@ -288,8 +291,8 @@ const words = [
     meaningZh: "推迟；延期",
     exampleEn: "The captain agreed to postpone the inspection.",
     exampleZh: "队长同意推迟检查。",
-    acceptedSpellings: ["postpone"],
-    confusionSet: ["delay", "resolve"],
+    acceptedForms: ["postpone"],
+    confusableIds: ["delay", "resolve"],
   },
   {
     id: "accuse",
@@ -298,8 +301,8 @@ const words = [
     meaningZh: "指控；控告",
     exampleEn: "Do not accuse anyone until the timeline is complete.",
     exampleZh: "在时间线完整之前不要指控任何人。",
-    acceptedSpellings: ["accuse"],
-    confusionSet: ["acquire", "suspect"],
+    acceptedForms: ["accuse"],
+    confusableIds: ["acquire", "suspect"],
   },
   {
     id: "confess",
@@ -308,8 +311,8 @@ const words = [
     meaningZh: "坦白；承认",
     exampleEn: "The courier refused to confess to changing the seal.",
     exampleZh: "信使拒绝承认更换了封印。",
-    acceptedSpellings: ["confess"],
-    confusionSet: ["conceal", "testimony"],
+    acceptedForms: ["confess"],
+    confusableIds: ["conceal", "testimony"],
   },
   {
     id: "coerce",
@@ -318,8 +321,8 @@ const words = [
     meaningZh: "强迫；胁迫",
     exampleEn: "Someone tried to coerce the witness into silence.",
     exampleZh: "有人试图胁迫证人保持沉默。",
-    acceptedSpellings: ["coerce"],
-    confusionSet: ["persuade", "accuse"],
+    acceptedForms: ["coerce"],
+    confusableIds: ["persuade", "accuse"],
   },
   {
     id: "reluctant",
@@ -328,8 +331,8 @@ const words = [
     meaningZh: "不情愿的；勉强的",
     exampleEn: "The reluctant guard eventually showed us the register.",
     exampleZh: "那名不情愿的守卫最终给我们看了登记簿。",
-    acceptedSpellings: ["reluctant"],
-    confusionSet: ["innocent", "credible"],
+    acceptedForms: ["reluctant"],
+    confusableIds: ["innocent", "credible"],
   },
   {
     id: "deceive",
@@ -338,8 +341,8 @@ const words = [
     meaningZh: "欺骗；蒙蔽",
     exampleEn: "The edited recording was designed to deceive listeners.",
     exampleZh: "剪辑过的录音旨在欺骗听众。",
-    acceptedSpellings: ["deceive"],
-    confusionSet: ["conceal", "betray"],
+    acceptedForms: ["deceive"],
+    confusableIds: ["conceal", "betray"],
   },
   {
     id: "betray",
@@ -348,8 +351,8 @@ const words = [
     meaningZh: "背叛；暴露",
     exampleEn: "A nervous gesture may betray what he knows.",
     exampleZh: "一个紧张的动作可能会暴露他知道的事情。",
-    acceptedSpellings: ["betray"],
-    confusionSet: ["deceive", "reveal"],
+    acceptedForms: ["betray"],
+    confusableIds: ["deceive", "reveal"],
   },
   {
     id: "innocent",
@@ -358,8 +361,8 @@ const words = [
     meaningZh: "无罪的；清白的",
     exampleEn: "The missing key may prove that she is innocent.",
     exampleZh: "失踪的钥匙可能证明她是清白的。",
-    acceptedSpellings: ["innocent"],
-    confusionSet: ["guilty", "suspect"],
+    acceptedForms: ["innocent"],
+    confusableIds: ["guilty", "suspect"],
   },
   {
     id: "verdict",
@@ -368,8 +371,8 @@ const words = [
     meaningZh: "裁决；判定",
     exampleEn: "The council will announce its verdict at dawn.",
     exampleZh: "委员会将在黎明时宣布裁决。",
-    acceptedSpellings: ["verdict"],
-    confusionSet: ["justice", "consequence"],
+    acceptedForms: ["verdict"],
+    confusableIds: ["justice", "consequence"],
   },
   {
     id: "justice",
@@ -378,8 +381,8 @@ const words = [
     meaningZh: "正义；公正",
     exampleEn: "Justice depends on evidence rather than rumours.",
     exampleZh: "公正取决于证据，而不是流言。",
-    acceptedSpellings: ["justice"],
-    confusionSet: ["verdict", "accountable"],
+    acceptedForms: ["justice"],
+    confusableIds: ["verdict", "accountable"],
   },
   {
     id: "decisive",
@@ -388,8 +391,8 @@ const words = [
     meaningZh: "决定性的；果断的",
     exampleEn: "The timestamp became the decisive clue.",
     exampleZh: "时间戳成为了决定性线索。",
-    acceptedSpellings: ["decisive"],
-    confusionSet: ["credible", "evident"],
+    acceptedForms: ["decisive"],
+    confusableIds: ["credible", "evident"],
   },
   {
     id: "consequence",
@@ -398,8 +401,8 @@ const words = [
     meaningZh: "后果；结果",
     exampleEn: "A false accusation can have a serious consequence.",
     exampleZh: "错误指控可能造成严重后果。",
-    acceptedSpellings: ["consequence"],
-    confusionSet: ["outcome", "verdict"],
+    acceptedForms: ["consequence"],
+    confusableIds: ["outcome", "verdict"],
   },
   {
     id: "accountable",
@@ -408,8 +411,8 @@ const words = [
     meaningZh: "负有责任的；应作解释的",
     exampleEn: "The director is accountable for the missing files.",
     exampleZh: "主管应对丢失的文件负责。",
-    acceptedSpellings: ["accountable"],
-    confusionSet: ["responsible", "credible"],
+    acceptedForms: ["accountable"],
+    confusableIds: ["responsible", "credible"],
   },
   {
     id: "resolve",
@@ -418,10 +421,10 @@ const words = [
     meaningZh: "解决；下定决心",
     exampleEn: "One honest statement could resolve the entire case.",
     exampleZh: "一句诚实的陈述就能解决整个案件。",
-    acceptedSpellings: ["resolve"],
-    confusionSet: ["solve", "postpone"],
+    acceptedForms: ["resolve"],
+    confusableIds: ["solve", "postpone"],
   },
-] satisfies WordDefinition[];
+] satisfies WordDefinitionInput[];
 
 export const sharedCurriculum = WordDefinitionSchema.array().length(42).parse(words);
 

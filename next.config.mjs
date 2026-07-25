@@ -9,4 +9,6 @@ const withSerwist = withSerwistInit({
 export default withSerwist({
   reactStrictMode: true,
   poweredByHeader: false,
+  allowedDevOrigins: ["127.0.0.1"],
+  devIndicators: false,
 });

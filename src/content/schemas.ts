@@ -7,14 +7,21 @@ const ContentIdSchema = z
 
 export const WordDefinitionSchema = z.object({
   id: ContentIdSchema,
+  senseId: ContentIdSchema.default("primary"),
   word: z.string().min(1),
   partOfSpeech: z.enum(["noun", "verb", "adjective", "adverb"]),
   meaningZh: z.string().min(1),
+  definitionEn: z.string().min(1).optional(),
+  level: z.enum(["5.0", "5.5", "6.0", "6.5"]).default("5.5"),
   exampleEn: z.string().min(1),
   exampleZh: z.string().min(1),
-  acceptedSpellings: z.array(z.string().min(1)).min(1),
-  confusionSet: z.array(ContentIdSchema).min(1),
-});
+  acceptedForms: z.array(z.string().min(1)).min(1),
+  confusableIds: z.array(ContentIdSchema).min(1),
+}).transform((word) => ({
+  ...word,
+  lexemeId: word.id,
+  itemId: word.id + ":" + word.senseId,
+}));
 
 export const DialogueOptionSchema = z.object({
   id: ContentIdSchema,
@@ -74,8 +81,9 @@ export const ListeningArtifactSchema = z.object({
   id: ContentIdSchema,
   titleZh: z.string().min(1),
   audioSrc: z.string().startsWith("/audio/"),
-  durationSeconds: z.number().positive(),
+  durationSeconds: z.number().min(30).max(90),
   speakerZh: z.string().min(1),
+  environmentalSoundZh: z.string().min(1),
   transcriptEn: z.string().min(20),
   questionZh: z.string().min(1),
   acceptedAnswerWordIds: z.array(ContentIdSchema).min(1),
@@ -113,12 +121,16 @@ export const ChapterDefinitionSchema = z.object({
 
 export const CasePackSchema = z.object({
   id: ContentIdSchema,
+  version: z.string().regex(/^\d+\.\d+\.\d+$/),
+  theme: z.enum(["court", "city"]),
+  contentWarningsZh: z.array(z.string().min(1)),
   titleZh: z.string().min(1),
   summaryZh: z.string().min(1),
   toneZh: z.string().min(1),
   headquartersRewardZh: z.string().min(1),
   chapters: z.array(ChapterDefinitionSchema).length(7),
 });
+export type WordDefinitionInput = z.input<typeof WordDefinitionSchema>;
 
 export type WordDefinition = z.infer<typeof WordDefinitionSchema>;
 export type DialogueOption = z.infer<typeof DialogueOptionSchema>;

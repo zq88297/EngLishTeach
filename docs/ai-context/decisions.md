@@ -11,3 +11,9 @@
 ## D2026-07-24-3: 视觉基准
 - 采用 Impeccable seed-164 的 harbor blue 作为共享品牌锚点。
 - 两宗案件使用独立叙事色，但共享组件、排版和可访问性规则。
+
+## D2026-07-24-4: 构建与浏览器验证边界
+- 背景：Next 16 默认 Turbopack 与当前 Serwist webpack 插件不兼容，本地环境还有代理和端口冲突。
+- 选择：开发和构建显式使用 webpack；Playwright 使用 3100、IPv4、Chromium 单 worker，并为本地地址补 NO_PROXY。
+- 理由：保证 Service Worker、Phaser 动态 chunk 和桌面/移动测试在跨环境中可重复运行。
+- 影响：若以后迁移 Serwist Turbopack 配置，需要同步恢复 Next 默认构建命令并更新 E2E 基线。
