@@ -6,7 +6,7 @@ async function waitForGame(page: Page) {
   await page.locator('[data-load-state="ready"] canvas').waitFor();
 }
 
-async function canvasColorCount(page: Page) {
+async function canvasSceneStats(page: Page) {
   const screenshot = await page.locator("canvas").screenshot();
   return page.evaluate(
     async (source) => {
@@ -14,20 +14,36 @@ async function canvasColorCount(page: Page) {
       image.src = source;
       await image.decode();
       const canvas = document.createElement("canvas");
-      canvas.width = 96;
-      canvas.height = 54;
+      canvas.width = 160;
+      canvas.height = 90;
       const context = canvas.getContext("2d");
 
-      if (!context) return 0;
+      if (!context) return { colors: 0, visibleRatio: 0 };
       context.drawImage(image, 0, 0, canvas.width, canvas.height);
       const data = context.getImageData(0, 0, canvas.width, canvas.height).data;
       const colors = new Set<string>();
+      let visible = 0;
+      let total = 0;
 
-      for (let index = 0; index < data.length; index += 16) {
-        colors.add(Array.from(data.slice(index, index + 4)).join(","));
+      for (let y = 12; y < 38; y += 1) {
+        for (let x = 60; x < 148; x += 1) {
+          const offset = (y * canvas.width + x) * 4;
+          const red = data[offset];
+          const green = data[offset + 1];
+          const blue = data[offset + 2];
+          const luminance =
+            red * 0.2126 + green * 0.7152 + blue * 0.0722;
+
+          if (luminance >= 42) visible += 1;
+          colors.add(`${red},${green},${blue}`);
+          total += 1;
+        }
       }
 
-      return colors.size;
+      return {
+        colors: colors.size,
+        visibleRatio: visible / total,
+      };
     },
     "data:image/png;base64," + screenshot.toString("base64"),
   );
@@ -37,13 +53,28 @@ test.beforeEach(async ({ page }) => {
   await waitForGame(page);
 });
 
-test("首屏可交互且 Phaser 画布包含有效像素", async ({ page }) => {
+test("首屏可交互且 Phaser 画布包含有效像素", async ({ page }, testInfo) => {
   await expect(page.getByText("ENGLISHTECH", { exact: true })).toBeVisible();
   await expect(page.getByRole("heading", { name: "丹阙疑云" })).toBeVisible();
-  expect(await canvasColorCount(page)).toBeGreaterThan(8);
+  const scene = await canvasSceneStats(page);
+
+  expect(scene.colors).toBeGreaterThan(8);
+  const minimumVisibleRatio = testInfo.project.name === "mobile" ? 0.55 : 0.72;
+  expect(scene.visibleRatio).toBeGreaterThan(minimumVisibleRatio);
   expect(
     await page.evaluate(() => document.documentElement.scrollWidth > innerWidth),
   ).toBe(false);
+});
+
+test("超宽桌面场景不会退化为大片纯黑", async ({ page }, testInfo) => {
+  test.skip(testInfo.project.name !== "desktop");
+  await page.setViewportSize({ width: 1874, height: 958 });
+  await waitForGame(page);
+
+  const scene = await canvasSceneStats(page);
+
+  expect(scene.colors).toBeGreaterThan(20);
+  expect(scene.visibleRatio).toBeGreaterThan(0.72);
 });
 
 test("可以切换案件并保持游戏世界就绪", async ({ page }) => {

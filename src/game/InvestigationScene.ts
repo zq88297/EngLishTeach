@@ -20,22 +20,22 @@ type ThemePalette = {
 
 const palettes: Record<GameTheme, ThemePalette> = {
   court: {
-    floor: 0x25312d,
-    floorAlt: 0x2d3a34,
-    wall: 0x101918,
-    line: 0x52695f,
+    floor: 0x34483d,
+    floorAlt: 0x3c5145,
+    wall: 0x0c1715,
+    line: 0x789082,
     accent: 0xc7a35c,
     warning: 0xb84035,
-    window: 0x91b6ad,
+    window: 0xa7c9bf,
   },
   city: {
-    floor: 0x1f3138,
-    floorAlt: 0x263c45,
-    wall: 0x111a1e,
-    line: 0x4e6a76,
+    floor: 0x2b424b,
+    floorAlt: 0x34515d,
+    wall: 0x0c171b,
+    line: 0x6f929f,
     accent: 0xe0a73f,
     warning: 0xce4037,
-    window: 0x86b9cc,
+    window: 0x9dccdc,
   },
 };
 
@@ -64,29 +64,53 @@ export class InvestigationScene extends Phaser.Scene {
     const palette = palettes[this.theme];
     const width = this.scale.width;
     const height = this.scale.height;
+    const sidePadding = Phaser.Math.Clamp(width * 0.055, 48, 100);
+    const topBoundary = width < 720 ? 160 : 88;
+    const playableBottom = width < 720
+      ? Math.max(topBoundary + 120, height * 0.46)
+      : height - 100;
 
     this.targetPositions = {
-      npc: { x: width * 0.66, y: height * 0.3 },
-      evidence: { x: width * 0.5, y: height * 0.42 },
-      exit: { x: Math.min(830, width - 45), y: height * 0.37 },
+      npc: {
+        x: Phaser.Math.Clamp(width * 0.66, sidePadding + 90, width - sidePadding - 90),
+        y: Phaser.Math.Clamp(height * 0.29, topBoundary + 55, playableBottom - 100),
+      },
+      evidence: {
+        x: Phaser.Math.Clamp(width * 0.5, sidePadding + 70, width - sidePadding - 70),
+        y: Phaser.Math.Clamp(height * 0.42, topBoundary + 105, playableBottom - 45),
+      },
+      exit: {
+        x: Phaser.Math.Clamp(width * 0.82, sidePadding + 100, width - sidePadding - 50),
+        y: Phaser.Math.Clamp(height * 0.34, topBoundary + 85, playableBottom - 70),
+      },
     };
 
-    const playerPosition = { x: Math.max(110, width * 0.3), y: height * 0.42 };
+    const playerPosition = {
+      x: Phaser.Math.Clamp(width * 0.31, sidePadding + 60, width - sidePadding - 60),
+      y: this.targetPositions.evidence.y,
+    };
+    const entityScale = Phaser.Math.Clamp(
+      Math.min(width / 1100, height / 650),
+      0.9,
+      1.35,
+    );
 
     this.cameras.main.setBackgroundColor(palette.wall);
     this.createTextures(palette);
-    this.drawRoom(palette);
-    this.physics.world.setBounds(24, 48, width - 48, height - 72);
+    this.drawRoom(palette, width, height);
 
     this.player = this.physics.add.sprite(playerPosition.x, playerPosition.y, "detective");
+    this.player.setScale(entityScale);
     this.player.setCollideWorldBounds(true);
     this.player.setDepth(5);
 
     this.npc = this.physics.add.sprite(this.targetPositions.npc.x, this.targetPositions.npc.y, "npc");
+    this.npc.setScale(entityScale);
     this.npc.setImmovable(true);
     this.npc.setDepth(4);
 
     this.evidence = this.physics.add.sprite(this.targetPositions.evidence.x, this.targetPositions.evidence.y, "evidence");
+    this.evidence.setScale(entityScale);
     this.evidence.setImmovable(true);
     this.evidence.setDepth(4);
 
@@ -190,14 +214,21 @@ export class InvestigationScene extends Phaser.Scene {
     evidence.destroy();
   }
 
-  private drawRoom(palette: ThemePalette): void {
-    const width = 960;
-    const height = 540;
-    this.physics.world.setBounds(82, 80, width - 164, height - 130);
+  private drawRoom(
+    palette: ThemePalette,
+    width: number,
+    height: number,
+  ): void {
+    this.physics.world.setBounds(
+      82,
+      80,
+      Math.max(120, width - 164),
+      Math.max(120, height - 130),
+    );
 
     const graphics = this.add.graphics();
     graphics.fillStyle(palette.floor);
-    graphics.fillRect(80, 78, width - 160, height - 128);
+    graphics.fillRect(80, 78, Math.max(120, width - 160), Math.max(120, height - 128));
 
     for (let y = 90; y < height - 60; y += 48) {
       for (let x = 92; x < width - 92; x += 48) {
@@ -214,21 +245,38 @@ export class InvestigationScene extends Phaser.Scene {
     graphics.fillRect(width - 84, 58, 24, height - 86);
 
     graphics.fillStyle(palette.window, 0.75);
-    graphics.fillRect(190, 60, 180, 14);
-    graphics.fillRect(590, 60, 180, 14);
+    const windowWidth = Phaser.Math.Clamp(width * 0.18, 100, 260);
+    graphics.fillRect(width * 0.2, 60, windowWidth, 14);
+    graphics.fillRect(width * 0.62, 60, windowWidth, 14);
 
-    graphics.fillStyle(0x111918, 0.86);
-    graphics.fillRoundedRect(430, 320, 190, 94, 4);
+    graphics.lineStyle(3, palette.line, 0.58);
+    graphics.beginPath();
+    graphics.moveTo(width * 0.31, this.targetPositions.evidence.y);
+    graphics.lineTo(this.targetPositions.evidence.x, this.targetPositions.evidence.y);
+    graphics.lineTo(this.targetPositions.npc.x, this.targetPositions.npc.y);
+    graphics.lineTo(this.targetPositions.exit.x, this.targetPositions.exit.y);
+    graphics.strokePath();
+
+    const tableWidth = Phaser.Math.Clamp(width * 0.16, 150, 250);
+    const tableX = this.targetPositions.evidence.x - tableWidth / 2;
+    const tableY = this.targetPositions.evidence.y - 47;
+    graphics.fillStyle(palette.wall, 0.9);
+    graphics.fillRoundedRect(tableX, tableY, tableWidth, 94, 4);
     graphics.lineStyle(2, palette.line, 0.8);
-    graphics.strokeRoundedRect(430, 320, 190, 94, 4);
+    graphics.strokeRoundedRect(tableX, tableY, tableWidth, 94, 4);
 
     graphics.fillStyle(palette.warning);
-    graphics.fillRect(825, 365, 12, 74);
+    graphics.fillRect(
+      this.targetPositions.exit.x + 31,
+      this.targetPositions.exit.y - 42,
+      12,
+      84,
+    );
 
     const title = this.add
       .text(
-        106,
-        102,
+        width * 0.5,
+        94,
         this.theme === "court" ? "ARCHIVE / 禁苑档案廊" : "PLATFORM 00 / 海港末站",
         {
           color: "#dbe5df",
@@ -236,7 +284,9 @@ export class InvestigationScene extends Phaser.Scene {
           fontSize: "13px",
         },
       )
-      .setAlpha(0.72);
+      .setOrigin(0.5, 0)
+      .setAlpha(0.86)
+      .setDepth(2);
 
     const evidenceGlow = this.add.circle(
       this.targetPositions.evidence.x,
@@ -254,7 +304,7 @@ export class InvestigationScene extends Phaser.Scene {
       repeat: -1,
     });
 
-    title.setDepth(2);
+    title.setVisible(width >= 520);
   }
 
   private findNearestTarget(): NavigationTarget | null {
